@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "probny",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 17.758927455728383, 50.812866291588712 ], [ 17.751744774502722, 50.802565978575821 ], [ 17.769714483767078, 50.797799949774749 ], [ 17.776617586457778, 50.809567808324566 ], [ 17.758927455728383, 50.812866291588712 ] ] ] } }
+]
+}
