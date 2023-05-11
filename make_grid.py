@@ -2,7 +2,6 @@ import geopandas as gpd
 from shapely.geometry import box
 import fiona
 from grid_engine import get_grid
-import pandas as pd
 
 class GridMaker:
     def __init__(self, dense, input_files):
@@ -13,6 +12,7 @@ class GridMaker:
         self.upper_left = None
         self.lower_right = None
         self.merged_geojson = None
+        self.grid = None
         
     def load_geojson(self):
         self.loaded_geojson = gpd.read_file(self.input_files)
@@ -23,19 +23,17 @@ class GridMaker:
         self.lower_right = ymax, xmin
         
     def make_grid(self):
-        grid = get_grid(self.upper_left, self.lower_right, self.dense)
-        grid.to_file('siatka_22.geojson', driver='GeoJSON')
+        self.grid = get_grid(self.upper_left, self.lower_right, self.dense)
+        self.grid.to_file('siatka_23.geojson', driver='GeoJSON')
     
     def merge_grid_with_field(self):
-       grid = gpd.read_file('siatka_22.geojson')
-       grid.to_crs('EPSG:3857')
-       field = gpd.read_file('probny.geojson')
-       field.to_crs('EPSG:3857')
-       self.merged_geojson = gpd.overlay(grid, field, how='intersection')
+       self.grid.crs = 'EPSG:3857'
+       self.merged_geojson = gpd.overlay(
+           self.grid, self.loaded_geojson, how='intersection'
+       )
 
-#self.merged_geojson = gpd.GeoDataFrame(pd.concat([grid, field], ignore_index=True))
     def save_results(self):
-        self.merged_geojson.to_file("merge_3_geojson.geojson", driver='GeoJSON')
+        self.merged_geojson.to_file("merge_geojson.geojson", driver='GeoJSON')
     
    
     def do(self):
@@ -45,7 +43,7 @@ class GridMaker:
         self.merge_grid_with_field()
         self.save_results()
     
-geojson_1 = GridMaker(35 ,"probny.geojson")
+geojson_1 = GridMaker(200 ,"probny.geojson")
 geojson_1.do()
 
    
